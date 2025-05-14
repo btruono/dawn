@@ -23,6 +23,7 @@ if (!customElements.get('media-gallery')) {
     }
 
     setActiveMedia(mediaId, prepend) {
+      
       const activeMedia = this.elements.viewer.querySelector(`[data-media-id="${ mediaId }"]`);
       this.elements.viewer.querySelectorAll('[data-media-id]').forEach((element) => {
         element.classList.remove('is-active');
@@ -44,7 +45,7 @@ if (!customElements.get('media-gallery')) {
           activeMedia.parentElement.scrollTo({ left: activeMedia.offsetLeft });
         }
         if (!this.elements.thumbnails || this.dataset.desktopLayout === 'stacked') {
-          activeMedia.scrollIntoView({behavior: 'smooth'});
+          // activeMedia.scrollIntoView({behavior: 'smooth'});
         }
       });
       this.playActiveMedia(activeMedia);

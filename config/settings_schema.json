@@ -4,8 +4,8 @@
     "theme_name": "Dawn",
     "theme_version": "9.0.0",
     "theme_author": "Shopify",
-    "theme_documentation_url": "https://help.shopify.com/manual/online-store/themes",
-    "theme_support_url": "https://support.shopify.com/"
+    "theme_documentation_url": "https:\/\/help.shopify.com\/manual\/online-store\/themes",
+    "theme_support_url": "https:\/\/support.shopify.com\/"
   },
   {
     "name": "t:settings_schema.logo.name",
@@ -167,7 +167,7 @@
         "id": "page_width",
         "min": 1000,
         "max": 1600,
-        "step": 100,
+        "step": 10,
         "default": 1200,
         "unit": "px",
         "label": "t:settings_schema.layout.settings.page_width.label"
@@ -1555,6 +1555,17 @@
         "id": "cart_drawer_collection",
         "label": "t:settings_schema.cart.settings.cart_drawer.collection.label",
         "info": "t:settings_schema.cart.settings.cart_drawer.collection.info"
+      }
+    ]
+  },
+  {
+    "name": "Name Aliases",
+    "settings": [
+      {
+        "type": "textarea",
+        "id": "vendor_collection_aliases",
+        "label": "Vendor/Collection",
+        "info": "Place each alias on a newline with case sensitive formatting of Vendor Name::Collection Name"
       }
     ]
   }

@@ -32,7 +32,7 @@
       assign ratio = 1
     endif
   -%}
-  <div class="card-wrapper product-card-wrapper underline-links-hover">
+  <div class="card-wrapper product-card-wrapper underline-links-hover {% if card_product.available == false %} product-card-wrapper--sold-out{% endif %}">
     <div
       class="
         card
@@ -46,12 +46,12 @@
       style="--ratio-percent: {{ 1 | divided_by: ratio | times: 100 }}%;"
     >
       <div
-        class="card__inner {% if settings.card_style == 'standard' %}color-{{ settings.card_color_scheme }} gradient{% endif %}{% if card_product.featured_media or settings.card_style == 'standard' %} ratio{% endif %}"
+        class="card__inner{% if card_product.featured_media or settings.card_style == 'standard' %} ratio{% endif %}"
         style="--ratio-percent: {{ 1 | divided_by: ratio | times: 100 }}%;"
       >
         {%- if card_product.featured_media -%}
           <div class="card__media">
-            <div class="media media--transparent media--hover-effect">
+            <div class="media media--transparent">
               {% comment %}theme-check-disable ImgLazyLoading{% endcomment %}
               <img
                 srcset="
@@ -112,26 +112,12 @@
                 class="full-unstyled-link"
                 aria-labelledby="StandardCardNoMediaLink-{{ section_id }}-{{ card_product.id }} NoMediaStandardBadge-{{ section_id }}-{{ card_product.id }}"
               >
-                {{ card_product.title | escape }}
+                {{- card_product.title | escape -}}&nbsp;&nbsp;/&nbsp;&nbsp;{%- render 'price', product: card_product, price_class: '' -%}
               </a>
             </h3>
           </div>
           <div class="card__badge {{ settings.badge_position }}">
-            {%- if card_product.available == false -%}
-              <span
-                id="NoMediaStandardBadge-{{ section_id }}-{{ card_product.id }}"
-                class="badge badge--bottom-left color-{{ settings.sold_out_badge_color_scheme }}"
-              >
-                {{- 'products.product.sold_out' | t -}}
-              </span>
-            {%- elsif card_product.compare_at_price > card_product.price and card_product.available -%}
-              <span
-                id="NoMediaStandardBadge-{{ section_id }}-{{ card_product.id }}"
-                class="badge badge--bottom-left color-{{ settings.sale_badge_color_scheme }}"
-              >
-                {{- 'products.product.on_sale' | t -}}
-              </span>
-            {%- endif -%}
+            {% render 'card-product-badges', card_product: card_product %}    
           </div>
         </div>
       </div>
@@ -149,7 +135,7 @@
               class="full-unstyled-link"
               aria-labelledby="CardLink-{{ section_id }}-{{ card_product.id }} Badge-{{ section_id }}-{{ card_product.id }}"
             >
-              {{ card_product.title | escape }}
+              {%- render 'card-title-price', product: card_product, price_class: '' -%}
             </a>
           </h3>
           <div class="card-information">
@@ -195,9 +181,8 @@
                 </span>
               </p>
             {%- endif -%}
-
-            <div class="loox-rating" data-id="{{ card_product.id }}" data-rating="{{ card_product.metafields.loox.avg_rating }}" data-raters="{{ card_product.metafields.loox.num_reviews }}"></div>
-{% render 'price', product: card_product, price_class: '' %}
+            {% render 'card-color-variants', product: card_product %}
+            
           </div>
         </div>
         {%- if show_quick_add -%}
@@ -315,13 +300,13 @@
           </div>
         {%- endif -%}
         <div class="card__badge {{ settings.badge_position }}">
-          {%- if card_product.available == false -%}
-            <span
+          {%- if card_product.available == false -%} 
+            {% comment %} <span
               id="Badge-{{ section_id }}-{{ card_product.id }}"
               class="badge badge--bottom-left color-{{ settings.sold_out_badge_color_scheme }}"
             >
               {{- 'products.product.sold_out' | t -}}
-            </span>
+            </span> {% endcomment %}
           {%- elsif card_product.compare_at_price > card_product.price and card_product.available -%}
             <span
               id="Badge-{{ section_id }}-{{ card_product.id }}"
@@ -356,7 +341,7 @@
           <div class="card__information">
             <h3 class="card__heading">
               <a role="link" aria-disabled="true" class="full-unstyled-link">
-                {{ 'onboarding.product_title' | t }}
+                {{- 'onboarding.product_title' | t -}}
               </a>
             </h3>
           </div>
@@ -366,7 +351,7 @@
         <div class="card__information">
           <h3 class="card__heading{% if settings.card_style == 'standard' %} h5{% endif %}">
             <a role="link" aria-disabled="true" class="full-unstyled-link">
-              {{ 'onboarding.product_title' | t }}
+              {{- 'onboarding.product_title' | t -}}
             </a>
           </h3>
           <div class="card-information">

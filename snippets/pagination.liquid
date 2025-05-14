@@ -14,61 +14,159 @@
 {{ 'component-pagination.css' | asset_url | stylesheet_tag }}
 
 {%- if paginate.parts.size > 0 -%}
-  <div class="pagination-wrapper">
-    <nav class="pagination" role="navigation" aria-label="{{ 'general.pagination.label' | t }}">
-      <ul class="pagination__list list-unstyled" role="list">
-        {%- if paginate.previous -%}
-          <li>
-            <a
-              href="{{ paginate.previous.url }}{{ anchor }}"
-              class="pagination__item pagination__item--next pagination__item-arrow link motion-reduce"
-              aria-label="{{ 'general.pagination.previous' | t }}"
-            >
-              {% render 'icon-caret' %}
-            </a>
-          </li>
-        {%- endif -%}
+  <div class="inline-paginate">
+    <input type="hidden" value="{{ paginate.next.url }}" data-next-url>
+    <input type="hidden" value="{{ paginate.pages }}" data-total-pages>
+    <input type="hidden" value="{{ paginate.current_page }}" data-current-page>
+    <div class="load-more_wrap">
+      <button id="load-products-btn" class="button button--full-width">
+        <span load-more-text>More Stuff</span>
+      </button>
+    </div>
 
-        {%- for part in paginate.parts -%}
-          <li>
-            {%- if part.is_link -%}
+    <div class="pagination-wrapper">
+      <nav class="pagination" role="navigation" aria-label="{{ 'general.pagination.label' | t }}">
+        <ul class="pagination__list list-unstyled" role="list">
+          {%- if paginate.previous -%}
+            <li>
               <a
-                href="{{ part.url }}{{ anchor }}"
-                class="pagination__item link"
-                aria-label="{{ 'general.pagination.page' | t: number: part.title }}"
+                href="{{ paginate.previous.url }}{{ anchor }}"
+                class="pagination__item pagination__item--next pagination__item-arrow link motion-reduce"
+                aria-label="{{ 'general.pagination.previous' | t }}"
               >
-                {{- part.title -}}
+                {% render 'icon-caret' %}
               </a>
-            {%- else -%}
-              {%- if part.title == paginate.current_page -%}
+            </li>
+          {%- endif -%}
+
+          {%- for part in paginate.parts -%}
+            <li>
+              {%- if part.is_link -%}
                 <a
-                  role="link"
-                  aria-disabled="true"
-                  class="pagination__item pagination__item--current light"
-                  aria-current="page"
+                  href="{{ part.url }}{{ anchor }}"
+                  class="pagination__item link"
                   aria-label="{{ 'general.pagination.page' | t: number: part.title }}"
                 >
                   {{- part.title -}}
                 </a>
               {%- else -%}
-                <span class="pagination__item">{{ part.title }}</span>
+                {%- if part.title == paginate.current_page -%}
+                  <a
+                    role="link"
+                    aria-disabled="true"
+                    class="pagination__item pagination__item--current light"
+                    aria-current="page"
+                    aria-label="{{ 'general.pagination.page' | t: number: part.title }}"
+                  >
+                    {{- part.title -}}
+                  </a>
+                {%- else -%}
+                  <span class="pagination__item">{{ part.title }}</span>
+                {%- endif -%}
               {%- endif -%}
-            {%- endif -%}
-          </li>
-        {%- endfor -%}
+            </li>
+          {%- endfor -%}
 
-        {%- if paginate.next -%}
-          <li>
-            <a
-              href="{{ paginate.next.url }}{{ anchor }}"
-              class="pagination__item pagination__item--prev pagination__item-arrow link motion-reduce"
-              aria-label="{{ 'general.pagination.next' | t }}"
-            >
-              {%- render 'icon-caret' -%}
-            </a>
-          </li>
-        {%- endif -%}
-      </ul>
-    </nav>
-  </div>
+          {%- if paginate.next -%}
+            <li>
+              <a
+                href="{{ paginate.next.url }}{{ anchor }}"
+                class="pagination__item pagination__item--prev pagination__item-arrow link motion-reduce"
+                aria-label="{{ 'general.pagination.next' | t }}"
+              >
+                {%- render 'icon-caret' -%}
+              </a>
+            </li>
+          {%- endif -%}
+        </ul>
+      </nav>
+    </div>
 {%- endif -%}
+
+<script>
+  const load_more_btn = document.getElementById('load-products-btn');
+
+  load_more_btn.addEventListener('click', (e) => {
+    e.preventDefault();
+    load_next_page();
+  });
+
+  {% if scroll_trigger == true %}
+    function throttle(func, wait) {
+      let waiting = false;
+      let collection_container = document.querySelector('#ProductGridContainer .collection');
+      return function () {
+        if (waiting) {
+          return;
+        }
+        waiting = true;
+        setTimeout(() => {
+          func.apply(this, arguments);
+          waiting = false;
+        }, wait);
+      };
+    }
+
+    const triggerLoadMoreBtn = throttle(() => {
+      let load_more_btn = document.getElementById('load-products-btn');
+      let windowScroll = window.scrollY;
+      let windowHeight = window.innerHeight;
+
+      if (windowScroll + windowHeight >= load_more_btn.offsetTop && !document.querySelector('body').classList.contains('loading-pagination')) {
+        document.querySelector('body').classList.add('loading-pagination');
+        load_next_page();
+      }
+    }, 750);
+
+    window.addEventListener('scroll', triggerLoadMoreBtn);
+  {% endif %}
+
+  const load_next_page = () => {
+    let load_more_btn = document.getElementById('load-products-btn');
+    let current_page = document.querySelector('[data-current-page]');
+    let next_url = document.querySelector('[data-next-url]');
+    let total_pages = parseInt(document.querySelector('[data-total-pages]').value);
+    let prevpage_window_y = 0;
+    fetch(next_url.value).then((response) => {
+      load_more_btn.disabled = true;
+      return response.text();
+
+    }).then((html) => {
+
+      let product_grid = document.querySelector('.product-grid');
+
+      prevpage_window_y = window.scrollY;
+
+      let parser = new DOMParser();
+      let fetched_document = parser.parseFromString(html, 'text/html');
+      let new_products = fetched_document.querySelector('.product-grid');
+      let new_current_page = parseInt(current_page.value) + 1;
+      let new_next_page = new_current_page + 1;
+      let new_next_url = next_url.value.replace(/page=[0-9]+/, 'page=' + new_next_page);
+
+      product_grid.innerHTML += new_products.innerHTML;
+      current_page.value = new_current_page;
+      next_url.value = new_next_url;
+
+      if (new_current_page < total_pages) {
+        load_more_btn.disabled = false;
+      }
+      window.scrollTo({
+        top: prevpage_window_y,
+        left: 0,
+      });
+      document.querySelector('body').classList.remove('loading-pagination');
+
+    }).catch((error) => {
+      console.log(error);
+    });
+  }
+</script>
+
+<noscript>
+  <style>
+    .pagination-wrapper {
+      display: block;
+    }
+  </style>
+</noscript>

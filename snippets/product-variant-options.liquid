@@ -14,6 +14,8 @@
     block: block
   %}
 {% endcomment %}
+{% assign key = "option" | append: option.position %}
+
 {%- liquid
   assign variants_available_arr = product.variants | map: 'available'
   assign variants_option1_arr = product.variants | map: 'option1'
@@ -21,60 +23,114 @@
   assign variants_option3_arr = product.variants | map: 'option3'
 
   assign product_form_id = 'product-form-' | append: section.id
+  assign is_variant_color = false
+  if option.name == "Color"
+    assign is_variant_color = true
+  endif
+
+  assign options_classes = ""
+  if block.settings.picker_type == 'button' and is_variant_color == false 
+    assign options_classes = options_classes | append: "options-grid"
+  endif
+  if is_variant_color
+    assign options_classes = options_classes | append: "options-image"
+  endif
 -%}
 
-{%- for value in option.values -%}
-  {%- liquid
-    assign option_disabled = true
-
-    for option1_name in variants_option1_arr
-      case option.position
-        when 1
-          if variants_option1_arr[forloop.index0] == value and variants_available_arr[forloop.index0]
-            assign option_disabled = false
+<div class="{{ options_classes }}">
+  {%- for value in option.values -%}
+    {%- liquid
+      assign option_disabled = true
+  
+      for option1_name in variants_option1_arr
+        case option.position
+          when 1
+            if variants_option1_arr[forloop.index0] == value and variants_available_arr[forloop.index0]
+              assign option_disabled = false
+            endif
+          when 2
+            if option1_name == product.selected_or_first_available_variant.option1 and variants_option2_arr[forloop.index0] == value and variants_available_arr[forloop.index0]
+              assign option_disabled = false
+            endif
+          when 3
+            if option1_name == product.selected_or_first_available_variant.option1 and variants_option2_arr[forloop.index0] == product.selected_or_first_available_variant.option2 and variants_option3_arr[forloop.index0] == value and variants_available_arr[forloop.index0]
+              assign option_disabled = false
+            endif
+        endcase
+      endfor
+  
+      assign image_alt = product.title | append: ' - ' | append: value
+      assign option_product_variants = nil
+      assign option_product_variant_image = nil
+      assign color_value = nil
+  
+      if is_variant_color
+        assign option_product_variants = product.variants | where: key, value
+        assign option_product_variant_image = option_product_variants[0].featured_image.src
+  
+        for item in option_product_variants
+          if item.metafields.custom.color != blank
+            assign color_value = item.metafields.custom.color
           endif
-        when 2
-          if option1_name == product.selected_or_first_available_variant.option1 and variants_option2_arr[forloop.index0] == value and variants_available_arr[forloop.index0]
-            assign option_disabled = false
-          endif
-        when 3
-          if option1_name == product.selected_or_first_available_variant.option1 and variants_option2_arr[forloop.index0] == product.selected_or_first_available_variant.option2 and variants_option3_arr[forloop.index0] == value and variants_available_arr[forloop.index0]
-            assign option_disabled = false
-          endif
-      endcase
-    endfor
-  -%}
-
-  {%- if block.settings.picker_type == 'button' -%}
-    <input
-      type="radio"
-      id="{{ section.id }}-{{ option.position }}-{{ forloop.index0 }}"
-      name="{{ option.name }}"
-      value="{{ value | escape }}"
-      form="{{ product_form_id }}"
-      {% if option.selected_value == value %}
-        checked
-      {% endif %}
-      {% if option_disabled %}
-        class="disabled"
-      {% endif %}
-    >
-    <label for="{{ section.id }}-{{ option.position }}-{{ forloop.index0 }}">
-      {{ value -}}
-      <span class="visually-hidden">{{ 'products.product.variant_sold_out_or_unavailable' | t }}</span>
-    </label>
-  {%- elsif block.settings.picker_type == 'dropdown' -%}
-    <option
-      value="{{ value | escape }}"
-      {% if option.selected_value == value %}
-        selected="selected"
-      {% endif %}
-    >
-      {% if option_disabled -%}
-        {{- 'products.product.value_unavailable' | t: option_value: value -}}
-      {%- else -%}
-        {{- value -}}
-      {%- endif %}
-    </option>
-  {%- endif -%}
-{%- endfor -%}
+        endfor
+      endif
+  
+      assign label_classes = ""
+      assign is_color_swatch = false
+      assign is_image_swatch = false
+      if is_variant_color and color_value
+        assign is_color_swatch = true
+      endif
+      if is_variant_color and option_product_variant_image
+        assign is_image_swatch = true
+      endif
+      if is_image_swatch or is_color_swatch
+        assign label_classes = "tooltip-parent image-label"
+      endif
+    -%}
+  
+    {%- if block.settings.picker_type == 'button' -%}
+      <input
+        type="radio"
+        id="{{ section.id }}-{{ option.position }}-{{ forloop.index0 }}"
+        name="{{ option.name }}"
+        value="{{ value | escape }}"
+        form="{{ product_form_id }}"
+        {% if option.selected_value == value %}
+          checked
+        {% endif %}
+        {% if option_disabled %}
+          class="disabled"
+        {% endif %}
+      >
+      <label for="{{ section.id }}-{{ option.position }}-{{ forloop.index0 }}" class="{{ label_classes }}" style="--background-color: {{ color_value }}">
+        {% if is_variant_color and option_product_variant_image %}
+          {{ option_product_variant_image | image_url: width: 150, height: 150 | image_tag: alt: image_alt }}
+        {% elsif is_variant_color == false %}
+          {{ value }}
+        {% endif %}
+  
+        {% if is_variant_color %}
+          <span class="tooltip">{{ value }}</span>
+        {% endif %}
+        <span class="visually-hidden">{{ 'products.product.variant_sold_out_or_unavailable' | t }}</span>
+      </label>
+  
+    {%- elsif block.settings.picker_type == 'dropdown' -%}
+  
+      <option
+        value="{{ value | escape }}"
+        {% if option.selected_value == value %}
+          selected="selected"
+        {% endif %}
+      >
+        {% if option_disabled -%}
+          {{- 'products.product.value_unavailable' | t: option_value: value -}}
+        {%- else -%}
+          {{- value -}}
+        {%- endif %}
+      </option>
+  
+    {%- endif -%}
+  {%- endfor -%}
+</div>

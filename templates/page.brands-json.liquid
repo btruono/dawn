@@ -1,0 +1,44 @@
+{% layout none %}
+
+{% liquid
+  assign vendor_aliases = settings.vendor_collection_aliases | newline_to_br | split: '<br />'
+  assign vendor_slugs = ''
+  assign collection_slugs = ''
+
+  for vendor in shop.vendors
+    assign vendor_slug = vendor | handleize
+
+    for vendor_alias in vendor_aliases
+      assign vendor_array = vendor_alias | split: '::'
+      assign vendor_array_name = vendor_array[0] | strip_newlines
+      if vendor == vendor_array_name
+        assign vendor_slugs = vendor_slugs | append: vendor_array[1] | append: '|'
+      endif
+    endfor  
+    
+    assign vendor_slugs = vendor_slugs | append: vendor_slug | append: '|'
+  endfor
+
+  assign vendor_slugs = vendor_slugs | remove_last: '|' | split: '|'
+  
+  for slug in vendor_slugs
+    assign collection = collections[slug]
+    if collection != blank
+      assign collection_slugs = collection_slugs | append: collection.handle | append: '|'
+    endif
+  endfor
+  
+  assign collection_slugs = collection_slugs | remove_last: '|' | split: '|'
+%}
+
+[
+{% for slug in collection_slugs %}
+  {% assign collection = collections[slug] %}
+  {
+    "id": {{ collection.id }}, 
+    "slug": "{{ collection.handle }}", 
+    "label": "{{ collection.title }}" 
+  }{%- unless forloop.last %},{% endunless %}
+{% endfor %}
+]
+

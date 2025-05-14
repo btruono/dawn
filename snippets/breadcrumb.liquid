@@ -1,0 +1,79 @@
+<nav class="breadcrumbs" role="navigation" aria-label="breadcrumbs">
+  <ol class="breadcrumbs__list">
+    <li class="breadcrumbs__item">
+      <a class="breadcrumbs__link" href="{{ routes.root_url }}">Shop</a>
+    </li>
+    {% assign has_top_level = false %}
+    {% assign has_secondary_level = false %}
+    {% for link in linklists[menu].links %}
+      {% for collection in product.collections %}
+        {% if collection.handle == link.object.handle and has_top_level == false %}
+          {% assign has_top_level = true %}
+          <li class="breadcrumbs__item">
+            <a href="{{ link.url }}" class="breadcrumbs__link">{{ collection.title }}</a>
+          </li>
+
+          {% for child_link in link.links %}
+            {% for collection in product.collections %}
+              {% if collection.handle == child_link.object.handle and has_secondary_level == false %}
+                {% assign has_secondary_level = true %}
+                <li class="breadcrumbs__item">
+                  <a href="{{ child_link.url }}" class="breadcrumbs__link">{{ collection.title }}</a>
+                </li>
+              {% endif %}
+            {% endfor %}
+          {% endfor %}
+        {% endif %}
+      {% endfor %}
+    {% endfor %}
+  </ol>
+</nav>
+
+<style>
+  .breadcrumbs {
+    margin: 0 0 1.8rem;
+    text-transform: uppercase;
+    font-size: 12px;
+    font-weight: bold;
+    letter-spacing: 0.04166667em;
+    line-height: 1;
+    height: 12px;
+  }
+
+  .breadcrumbs__list {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    line-height: 1;
+    height: 12px;
+  }
+
+  .breadcrumbs__item {
+    display: inline-block;
+    line-height: 1;
+    display: inline-block;
+    height: 12px;
+  }
+
+  .breadcrumbs__item:not(:last-child):after {
+    content: '/';
+    display: inline-block;
+    margin: 0 0.2em;
+    vertical-align: middle;
+  }
+
+  .breadcrumbs__link {
+    text-decoration: none;
+    height: 12px;
+    display: inline-block;
+  }
+
+  .breadcrumbs__link:is(:hover, :focus) {
+    color: var(--uc-color-gold);
+  }
+
+  .breadcrumbs__link[aria-current='page'] {
+    color: var(--uc-color-gold);
+    text-decoration: none;
+  }
+</style>

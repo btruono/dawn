@@ -1,0 +1,95 @@
+
+{% assign letters = "A|B|C|D|E|F|G|H|I|J|K|L|M|N|O|P|Q|R|S|T|U|V|W|X|Y|Z" | split: "|" %}
+{% assign numbers = "1|2|3|4|5|6|7|8|0|0" | split: "|" %}
+{% assign vendor_aliases = settings.vendor_collection_aliases | newline_to_br | split: '<br />' %}
+
+<div class="page-width section-{{ section.id }}-padding">
+  {% for letter in letters %}
+    {% liquid
+      assign section_vendors_alpha = "" 
+      for vendor in shop.vendors
+        assign starts_with_letter = vendor | split: letter
+        assign vendor_slug = vendor | handleize
+
+        for vendor_alias in vendor_aliases
+          assign vendor_array = vendor_alias | split: '::'
+          assign vendor_array_name = vendor_array[0] | strip_newlines
+          if starts_with_letter[0] == blank and vendor == vendor_array_name
+            assign section_vendors_alpha = section_vendors_alpha | append: vendor_array[1] | append: '|'
+          endif
+        endfor
+        
+        if starts_with_letter[0] == blank
+          assign section_vendors_alpha = section_vendors_alpha | append: vendor | append: '|'
+        endif
+      endfor
+  
+      assign section_vendors_alpha = section_vendors_alpha | remove_last: '|' | split: '|'
+    %}
+
+  
+    {% if section_vendors_alpha != blank %}
+      <div class="brand-section">
+        <h4 class="brand-section__title">{{ letter }}</h4>
+        <ul class="brand-list">
+          {%- for vendor in section_vendors_alpha -%}
+            {% assign vendor_slug = vendor | handleize %}
+            <li>
+              {% assign vendor_url = vendor | url_for_vendor %}
+              {% if collections[vendor_slug] != blank %}
+                {% assign vendor_url = collections[vendor_slug].url %}
+              {% endif %}
+              <a href="{{ vendor_url }}">{{ vendor }}</a> 
+            </li>
+          {%- endfor -%}
+        </ul>
+      </div>
+    {% endif %}
+  {% endfor %}
+
+  {% liquid
+    assign section_vendors_num = "" 
+    for vendor in shop.vendors
+      assign vendor_slug = vendor | handleize
+      for number in numbers
+        assign starts_with_number = vendor | split: number
+        if starts_with_number[0] == blank
+          assign section_vendors_num = section_vendors_num | append: vendor | append: '|'
+        endif
+      endfor
+    endfor
+    assign section_vendors_num = section_vendors_num | remove_last: '|' | split: '|'
+  %}
+
+
+  {% if section_vendors_num != blank %}
+    <div class="brand-section">
+      <h class="brand-section__title">#</h>
+      <ul class="brand-list">
+        {% for vendor in section_vendors_num %}
+          {% assign vendor_slug = vendor | handleize %}
+          <li>
+            {% assign vendor_url = vendor | url_for_vendor %}
+              {% if collections[vendor_slug] != blank %}
+                {% assign vendor_url = collections[vendor_slug].url %}
+              {% endif %}
+              <a href="{{ vendor_url }}">{{ vendor }}</a> 
+          </li>
+        {% endfor %}
+      </ul>
+    </div>
+  {% endif %}  
+</div>
+
+{% schema %}
+{
+  "name": "Brands List",
+  "tag": "section",
+  "class": "brands-list-container",
+  "presets": [
+    {
+      "name": "Brands List"
+    }
+  ]
+}
+{% endschema %}

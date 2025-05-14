@@ -1,0 +1,83 @@
+{% assign bottle_nexus_id = product.metafields.custom.bottle_nexus_id %}
+{% assign bottle_nexus_token = "901bf122-a9ba-11ee-a7bd-0242ac110002" %}
+{% if product.metafields.custom.bottlenexus_token %}
+    {% assign bottle_nexus_token = product.metafields.custom.bottlenexus_token %}
+{% endif %}
+
+{% if bottle_nexus_id %}
+  <div id="bottle-nexus-button">
+    <script type="text/javascript">
+      (function (currentScript) {
+          window.BottleNexus ? BottleNexusInit() : loadScript();
+          function loadScript() {
+              var script = document.createElement('script');
+              script.async = true;
+              script.src = 'https://buybutton.bottlenexus.com/buybutton.min.js?v=1704292502918';
+              (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(script);
+              script.onload = BottleNexusInit;
+          }
+          function BottleNexusInit() {
+              BottleNexus.init().createComponent({
+                  currentScript: currentScript,
+                  token: "{{ bottle_nexus_token }}",
+                  id: {{ bottle_nexus_id}},
+                  options: {
+              "iframe": false,
+              "layout": "basic",
+              "behavior": "sidebar",
+              "buttonRadius": "0",
+              "buttonFontSize": 16,
+              "buttonWidth": 250,
+              "buttonAlignment": "center",
+              "buttonText": "ADD TO CART",
+              "buttonTextColor": "#FFFFFFFF",
+              "buttonBackground": "#000000ff",
+              "cartButtonRadius": 0,
+              "cartCheckoutBackgroundColor": "#000000ff",
+              "cartCheckoutBackgroundDisabledColor": "#B2B2B2FF",
+              "cartCheckoutTextColor": "#FFFFFFFF",
+              "cartHeadingText": "Cart",
+              "cartCheckoutText": "CHECKOUT",
+              "cartEmptyText": "No products added",
+              "cartAdditionalInformationText": "We are currently not shipping to MI / UT / MA / SD / AK / HI. All alcohol orders are processed and fulfilled by licensed third-party retailers on the Bottle Nexus network. The checkout functionality is provided solely for the convenience of our consumers.",
+              "cartBackgroundColor": "#FEFEFEFF",
+              "cartTextColor": "#000000FF",
+              "utm": {
+                  "source": "BuyButton"
+              },
+              "styles": {
+                  "[data-component='button']": {
+                      "background-color": "transparent",
+                      "color": "black",
+                      "border": "black solid 1px",
+                      "font-weight": "bold",
+                      "width": "100%",
+                      "margin-bottom": "0px",
+                      "font-size": "12px",
+                      "letter-spacing": "0.5px",
+                      "font-family": "Helvetica Neue, Helvetica, arial, sans-serif",
+                  },
+                  "[data-component='button']:hover": {
+                      "background-color": "transparent",
+                      "color": "black",
+                      "border": "black solid 1px",
+                      "font-weight": "bold",
+                      "margin-bottom": "0px"
+                  },
+                  "[data-component='button-wrapper']": {
+				            "width": "100%"
+                  },
+                  "[data-component='button-details']": {
+                      "width": "100%"
+                  }
+              }
+          }
+              });
+          }
+
+        })(document.currentScript);
+  
+
+    </script>
+  </div>
+{% endif %}

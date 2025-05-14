@@ -14,6 +14,11 @@
     %}
 {% endcomment %}
 
+{% assign img_loading = "lazy" %}
+{% if loading != blank %}
+    {% assign img_loading = loading %}
+{% endif %}
+
 {%- if media.media_type == 'image' -%}
   <img
     class="global-media-settings global-media-settings--no-shadow{% if variant_image %} product__media-item--variant{% endif %}"
@@ -29,7 +34,7 @@
     sizes="(min-width: 750px) calc(100vw - 22rem), 1100px"
     src="{{ media.preview_image | image_url: width: 1445 }}"
     alt="{{ media.alt | escape }}"
-    loading="lazy"
+    loading="{{ img_loading }}"
     width="1100"
     height="{{ 1100 | divided_by: media.preview_image.aspect_ratio | ceil }}"
     data-media-id="{{ media.id }}"

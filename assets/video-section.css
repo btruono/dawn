@@ -34,7 +34,7 @@
 }
 
 .video-section__media video {
-  background: #000000;
+  background: var(--uc-color-black);
 }
 
 .video-section__media.media-fit-cover video {

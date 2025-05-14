@@ -30,7 +30,7 @@
   }
 {%- endstyle -%}
 
-<footer class="footer color-{{ section.settings.color_scheme }} gradient section-{{ section.id }}-padding">
+{% comment %} <footer class="footer color-{{ section.settings.color_scheme }} gradient section-{{ section.id }}-padding">
   {%- liquid
     assign has_social_icons = true
     if settings.social_facebook_link == blank and settings.social_instagram_link == blank and settings.social_youtube_link == blank and settings.social_tiktok_link == blank and settings.social_twitter_link == blank and settings.social_pinterest_link == blank and settings.social_snapchat_link == blank and settings.social_tumblr_link == blank and settings.social_vimeo_link == blank
@@ -354,7 +354,240 @@
       </div>
     </div>
   </div>
-</footer>
+</footer> {% endcomment %}
+{% comment %} {%- if section.settings.enable_country_selector and localization.available_countries.size > 1 -%}
+          <noscript>
+            {%- form 'localization', id: 'FooterCountryFormNoScript', class: 'localization-form' -%}
+              <div class="localization-form__select">
+                <h2 class="visually-hidden" id="FooterCountryLabelNoScript">{{ 'localization.country_label' | t }}</h2>
+                <select
+                  class="localization-selector link"
+                  name="country_code"
+                  aria-labelledby="FooterCountryLabelNoScript"
+                >
+                  {%- for country in localization.available_countries -%}
+                    <option
+                      value="{{ country.iso_code }}"
+                      {%- if country.iso_code == localization.country.iso_code %}
+                        selected
+                      {% endif %}
+                    >
+                      {{ country.name }} ({{ country.currency.iso_code }}
+                      {{ country.currency.symbol }})
+                    </option>
+                  {%- endfor -%}
+                </select>
+                {% render 'icon-caret' %}
+              </div>
+              <button class="button button--tertiary">{{ 'localization.update_country' | t }}</button>
+            {%- endform -%}
+          </noscript>
+          <localization-form>
+            {%- form 'localization', id: 'FooterCountryForm', class: 'localization-form' -%}
+              <div class="no-js-hidden">
+                <h2 class="caption-large text-body" id="FooterCountryLabel">{{ 'localization.country_label' | t }}</h2>
+                {%- render 'country-localization', localPosition: 'FooterCountry' -%}
+              </div>
+            {%- endform -%}
+          </localization-form>
+        {%- endif -%} {% endcomment %}
+
+{% assign uncrate_com_url = '//uncrate.com' %}
+{% assign kit_uncrate_com_url = '//kit.uncrate.com' %}
+{% assign shop_uncrate_com_url = '//shop.uncrate.com' %}
+{% assign returns_uncrate_com_url = '//returns.uncrate.com' %}
+
+{% capture localization_linklist %}
+<ul>
+  <li><a href="/?country=ES">Español</a></li>
+  <li><a href="/?country=FR">Français</a></li>
+  <li><a href="/?country=DE">Deutsche</a></li>
+  <li><a href="/?country=JP">日本語</a></li>
+  <li><a href="/?country=CN">中文</a></li>
+</ul>
+{% endcapture %}
+<div 
+  class="main-footer-wrapper" 
+  style="
+    {% if section.settings.background_image_1x != blank %}
+      --bg-img-1x: url({{ section.settings.background_image_1x | image_url }}); 
+    {% endif %}
+    {% if section.settings.background_image_2x != blank %}
+      --bg-img-2x: url({{ section.settings.background_image_2x | image_url }}); 
+    {% endif %}
+  "
+>
+  <footer class="main-footer">
+    <!-- Upper footer modules. -->
+    <div class="footer-modules upper-footer">
+      <div class="footer-module footer-connect clearfix">
+        <div class="newsletter-subscription">
+          <h4>Get on the Black List.</h4>
+          <p>Be the first to know about the newest gear, automobiles, and apparel for men.</p>
+
+          <!-- Begin MailChimp Signup Form -->
+          <div id="mc_embed_signup">
+          
+          <form action="https://uncrate.us1.list-manage.com/subscribe/post?u=125c5c5823653b64c4aee90cc&amp;id=e896b3ec40" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate clearfix" target="_blank" novalidate="novalidate">
+              <div id="mc_embed_signup_scroll">
+          
+          <!-- <div class="indicates-required"><span class="asterisk">*</span> indicates required</div> -->
+          <div class="mc-field-group">
+          	<input type="email" value="" name="EMAIL" class="newsletter-email" id="mce-EMAIL" placeholder="YOUR EMAIL" onfocus="this.placeholder = ''">
+          </div>
+          	<div id="mce-responses" class="clear">
+          		<div class="response" id="mce-error-response" style="display:none"></div>
+          		<div class="response" id="mce-success-response" style="display:none">YOU’RE NOW ON THE LIST.</div>
+          	</div>    <!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups-->
+              <div style="position: absolute; left: -5000px;" aria-hidden="true"><input type="text" name="b_125c5c5823653b64c4aee90cc_e896b3ec40" tabindex="-1" value=""></div>
+              <div class="clear"><input type="submit" value="Subscribe" name="subscribe" id="mc-embedded-subscribe" class="newsletter-submit"></div>
+              </div>
+          </form>
+          
+          </div>
+        </div>
+      </div>
+
+      <div class="footer-module footer-text-box">
+        <div class="footer-quote">
+          <div class="rte">
+            <h3>“If James Bond were to make an app for the stuff he wanted to buy, this would be the app.”</h3>
+          </div>
+          <p>— <a href="https://www.youtube.com/watch?v=QzC0pxSnu3o" target="_blank">Doug Stephens, Retail Futurist</a></p>
+        </div>
+
+        <div class="footer-app-links">
+          <div class="footer-app-devices">
+            <img src="{{uncrate_com_url}}/img/app-devices.png">
+          </div>
+          <div class="footer-app-buttons">
+            <a href="http://un.cr/appleapp" target="_blank" class="footer-app-button"><img src="{{uncrate_com_url}}/img/app-store.jpg"></a>
+            <a href="http://un.cr/androidapp" target="_blank" class="footer-app-button"><img src="{{uncrate_com_url}}/img/google-play.jpg"></a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Lower footer modules. -->
+
+    <div class="footer-modules lower-footer">
+      <div class="footer-module footer-link-lists">
+        <div class="footer-link-list">
+          <h4>Uncrate.com</h4>
+          <ul>
+            <li><a href="{{ uncrate_com_url }}/gear/">Gear</a></li>
+            <li><a href="{{ uncrate_com_url }}/style/">Style</a></li>
+            <li><a href="{{ uncrate_com_url }}/cars/">Cars</a></li>
+            <li><a href="{{ uncrate_com_url }}/shelter/">Shelter</a></li>
+            <li><a href="{{ uncrate_com_url }}/vices/">Vices</a></li>
+            <li><a href="{{ uncrate_com_url }}/etc/">Etc.</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-link-list">
+          <h4>Uncrate.tv</h4>
+          <ul class="top-footer-link-list">
+            <li><a href="{{ uncrate_com_url }}/tv/">Latest Videos</a></li>
+            <li><a href="{{ uncrate_com_url }}/tv/channels/">Channels</a></li>
+          </ul>
+          
+          <h4>Magazine</h4>
+          <ul>
+            <li><a href="{{ uncrate_com_url }}/magazine/">Buy Issues</a></li>
+            <li><a href="{{ uncrate_com_url }}/magazine#magazine-stockists">Stockists</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-link-list">
+          <h4>shop.uncrate.com</h4>
+          <ul>
+            <li><a href="{{ routes.account_url }}">Order Status</a></li>
+            <li>
+              <script type="text/javascript">
+                document.write(
+                  '<n uers="znvygb:freivpr@hapengr.pbz">Pbagnpg Hf</n>'.replace(/[a-zA-Z]/g, function (c) {
+                    return String.fromCharCode((c <= 'Z' ? 90 : 122) >= (c = c.charCodeAt(0) + 13) ? c : c - 26);
+                  })
+                );
+              </script>
+            </li>
+            <li><a href="{{ returns_uncrate_com_url }}">Returns</a></li>
+            <li><a href="{{ uncrate_com_url }}/supply/shipping/">Shipping</a></li>
+            <li><a href="{{ collections['gift-cards'].url }}">Gift Cards</a></li>
+            <li><a href="{{ uncrate_com_url }}/supply/affiliates/">Affiliates</a></li>
+            <li><a href="{{ uncrate_com_url }}/supply/military-discount">Military Discount</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-link-list">
+          <h4>Elsewhere</h4>
+          <ul>
+            <li><a href="http://www.twitter.com/uncrate">Twitter</a></li>
+            <li><a href="http://www.instagram.com/uncrate">Instagram</a></li>
+            <li><a href="http://www.facebook.com/uncrate">Facebook</a></li>
+            <li><a href="http://www.youtube.com/uncrate">Youtube</a></li>
+            <li><a href="http://uncrate.tumblr.com">Tumblr</a></li>
+            <!--<li><a href="http://www.snapchat.com/uncrate">Snapchat</a></li> -->
+          </ul>
+        </div>
+
+        <div class="footer-link-list">
+          <h4>Global</h4>
+          {{ localization_linklist }}
+        </div>
+
+        <div class="footer-link-list">
+          <h4>Imprint</h4>
+          <ul>
+            <li><a href="{{ uncrate_com_url }}/about/">About</a></li>
+            <li><a href="{{ uncrate_com_url }}/contact/">Contact</a></li>
+            <li><a href="{{ kit_uncrate_com_url }}/">Advertise</a></li>
+            <li><a href="{{ uncrate_com_url }}/privacy/">Privacy</a></li>
+            <li><a href="{{ uncrate_com_url }}/terms/">Terms</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Footer Mobile LinkLists -->
+
+      <div class="footer-module mobile-footer-link-lists">
+        <div class="mobile-footer-link-list">
+          <ul>
+            <li><a href="{{ uncrate_com_url }}">Uncrate.com</a></li>
+            <li><a href="{{ routes.root_url }}">shop.uncrate.com</a></li>
+            <li><a href="{{ uncrate_com_url }}/tv/">Uncrate.tv</a></li>
+          </ul>
+          <ul>
+            <li><a href="{{ uncrate_com_url }}/about/">About</a></li>
+            <li><a href="{{ uncrate_com_url }}/contact/">Contact</a></li>
+            <li><a href="{{ kit_uncrate_com_url }}/">Advertise</a></li>
+            <li><a href="{{ uncrate_com_url }}/privacy/">Privacy</a></li>
+            <li><a href="{{ uncrate_com_url }}/terms/">Terms</a></li>
+          </ul>
+          {{ localization_linklist }}
+        </div>
+      </div>
+    </div>
+
+
+    <div class="copyright">
+      <div class="footer-logo"><img src="{{ uncrate_com_url }}/img/footer-uncrate-logo.png"></div>
+      <p role="contentinfo">
+        © {{ 'now' | date: '%Y' }} Uncrate LLC. All rights reserved. <br>
+        Independently published since 2005.
+      </p>
+      <p role="contentinfo">
+        <!--
+          All items on Uncrate are hand-chosen by editors for quality and relevance to our readers. Some articles may be sponsored by brands, while others may have an affiliate link that allows us to receive a commission. Both help support Uncrate and keep it free to read.
+        -->
+        All items on Uncrate are hand-chosen by editors for quality and relevance to our readers. Supply items are sold
+        directly by us. Some editorial may be sponsored or allow us to receive a commission.
+      </p>
+      <img src="{{ uncrate_com_url }}/img/payment.jpg" alt="Payment Methods Accepted" class="paymentmethods">
+    </div>
+
+  </footer>
+</div>
 
 {%- if section.settings.enable_country_selector or section.settings.enable_language_selector -%}
   <script src="{{ 'localization-form.js' | asset_url }}" defer="defer"></script>
@@ -495,6 +728,20 @@
       ],
       "default": "background-1",
       "label": "t:sections.all.colors.label"
+    },
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "image_picker",
+      "id": "background_image_2x",
+      "label": "Background Image @2x" 
+    },
+    {
+      "type": "image_picker",
+      "id": "background_image_1x",
+      "label": "Background Image @1x"
     },
     {
       "type": "header",

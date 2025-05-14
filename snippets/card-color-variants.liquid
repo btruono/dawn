@@ -1,0 +1,29 @@
+{% assign colors = product.options_with_values | where: 'name', "Color" %}
+{% if colors != blank %}
+  {% assign key = "option" | append: colors[0].position %}
+  <div class="product-card-colors">
+    {% for color in colors[0].values %}
+      
+      {% liquid 
+        assign color_variants = product.variants | where: key, color
+        assign image_alt = product.title | append: ' - ' | append: color
+        assign color_value = nil
+        
+        for option in color_variants
+          if option.metafields.custom.color != blank
+            assign color_value = option.metafields.custom.color 
+          endif
+        endfor
+      %}
+      
+      
+      <a href="{{ color_variants[0].url }}" class="product-card-color tooltip-parent" style="background-color: {{ color_value }}">
+        <span class="tooltip">{{ color }}</span>
+        {% if color_variants[0].featured_image.src != blank %}
+          {{ color_variants[0].featured_image.src | image_url: width: 75, height: 75 | image_tag: alt: image_alt }}
+        {% endif %}
+      </a>
+    
+    {% endfor %}
+  </div>
+{% endif %}

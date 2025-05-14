@@ -52,10 +52,16 @@ class CartItems extends HTMLElement {
         const html = new DOMParser().parseFromString(responseText, 'text/html');
         const sourceQty = html.querySelector('cart-items');
         this.innerHTML = sourceQty.innerHTML;
+        this.setCartCountCookie();
       })
       .catch(e => {
         console.error(e);
       });
+  }
+
+  setCartCountCookie() {
+    const cartCount =  document.querySelector(".cart-count-bubble span").innerText;
+    setCookie('cart_count', cartCount, 10);
   }
 
   getSectionsToRender() {
@@ -147,6 +153,7 @@ class CartItems extends HTMLElement {
         errors.textContent = window.cartStrings.error;
       })
       .finally(() => {
+        this.setCartCountCookie();
         this.disableLoading(line);
       });
   }

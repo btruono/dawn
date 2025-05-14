@@ -62,37 +62,6 @@
               </button>
             </noscript>
           </div>
-
-          <div class="product-count-vertical light" role="status">
-            <h2 class="product-count__text text-body">
-              <span id="ProductCountDesktop">
-                {%- if collection.results_count -%}
-                  {{
-                    'templates.search.results_with_count'
-                    | t: terms: collection.terms, count: collection.results_count
-                  }}
-                {%- elsif collection.products_count == collection.all_products_count -%}
-                  {{ 'products.facets.product_count_simple' | t: count: collection.products_count }}
-                {%- else -%}
-                  {{
-                    'products.facets.product_count'
-                    | t: product_count: collection.products_count, count: collection.all_products_count
-                  }}
-                {%- endif -%}
-              </span>
-            </h2>
-            <div class="loading-overlay__spinner">
-              <svg
-                aria-hidden="true"
-                focusable="false"
-                class="spinner"
-                viewBox="0 0 66 66"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <circle class="path" fill="none" stroke-width="6" cx="33" cy="33" r="30"></circle>
-              </svg>
-            </div>
-          </div>
         </form>
       </facet-filters-form>
     {%- endif -%}
@@ -136,36 +105,85 @@
           <div class="collection{% if section.settings.filter_type != 'vertical' %} page-width{% endif %}">
             <div class="loading-overlay gradient"></div>
 
-            <ul
-              id="product-grid"
-              data-id="{{ section.id }}"
-              class="
-                grid product-grid grid--{{ section.settings.columns_mobile }}-col-tablet-down
-                grid--{{ section.settings.columns_desktop }}-col-desktop
-              "
-            >
-              {%- for product in collection.products -%}
-                {% assign lazy_load = false %}
-                {%- if forloop.index > 2 -%}
-                  {%- assign lazy_load = true -%}
-                {%- endif -%}
-                <li class="grid__item">
-                  {% render 'card-product',
-                    card_product: product,
-                    media_aspect_ratio: section.settings.image_ratio,
-                    show_secondary_image: section.settings.show_secondary_image,
-                    show_vendor: section.settings.show_vendor,
-                    show_rating: section.settings.show_rating,
-                    lazy_load: lazy_load,
-                    show_quick_add: section.settings.enable_quick_add,
-                    section_id: section.id
-                  %}
-                </li>
-              {%- endfor -%}
-            </ul>
+            {% comment %}
+              Retrieves parameters from the URL
+
+              Accepts:
+                - key: {String} Pass a key to retrieve certain data
+
+              Usage:
+                {% render 'data-url-parameters' key: 'handle' %}
+            {% endcomment %}
+
+            {%- liquid
+              # theme-check-disable
+              capture content_for_query_string
+                echo content_for_header
+              endcapture
+              # theme-check-enable
+
+              assign page_url = content_for_query_string | split: '"pageurl":"' | last | split: '"' | first | split: '.myshopify.com' | last | replace: '\/', '/' | replace: '%20', ' ' | replace: '\u0026', '&'
+              assign page_query_string = page_url | split: '/' | last
+              assign split_string = page_query_string | split: '?'
+              assign parameters = split_string[1] | downcase | split: '&'
+              assign show_email_grid = false
+
+              assign key = 'email'
+              assign keyval = 'grid'
+
+              if key
+                assign parameter_found = false
+
+                assign key_downcase = key | downcase
+
+                for parameter in parameters
+                  assign parameter_arr = parameter | split: '='
+                  assign parameter_property = parameter_arr[0] | downcase
+                  if parameter_property == key_downcase and parameter_found == false
+                    assign parameter_found = parameter_arr[1]
+                  endif
+                endfor
+
+                if parameter_found == keyval
+                  assign show_email_grid = true
+                endif
+              else
+                assign parameters = parameters | join: ','
+              endif
+            -%}
+
+            {% if show_email_grid %}
+              {% render 'email-table' %}
+
+            {% else %}
+              <ul
+                id="product-grid"
+                data-id="{{ section.id }}"
+                class="grid product-grid product-grid--items-bordered grid--{{ section.settings.columns_mobile }}-col-tablet-down grid--{{ section.settings.columns_desktop }}-col-desktop"
+              >
+                {%- for product in products -%}
+                  {% assign lazy_load = false %}
+                  {%- if forloop.index > 2 -%}
+                    {%- assign lazy_load = true -%}
+                  {%- endif -%}
+                  <li class="grid__item">
+                    {% render 'card-product',
+                      card_product: product,
+                      media_aspect_ratio: section.settings.image_ratio,
+                      show_secondary_image: section.settings.show_secondary_image,
+                      show_vendor: section.settings.show_vendor,
+                      show_rating: section.settings.show_rating,
+                      lazy_load: lazy_load,
+                      show_quick_add: section.settings.enable_quick_add,
+                      section_id: section.id
+                    %}
+                  </li>
+                {%- endfor -%}
+              </ul>
+            {%- endif -%}
 
             {%- if paginate.pages > 1 -%}
-              {% render 'pagination', paginate: paginate, anchor: '' %}
+              {% render 'pagination', paginate: paginate, anchor: '', scroll_trigger: true %}
             {%- endif -%}
           </div>
         {%- endif -%}
@@ -183,7 +201,7 @@
       "type": "range",
       "id": "products_per_page",
       "min": 8,
-      "max": 24,
+      "max": 200,
       "step": 4,
       "default": 16,
       "label": "t:sections.main-collection-product-grid.settings.products_per_page.label"

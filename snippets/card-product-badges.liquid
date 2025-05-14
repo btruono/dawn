@@ -1,0 +1,34 @@
+{%- liquid
+  assign is_promotion = false
+-%}
+{% if card_product.tags contains 'only at uncrate' %}
+  <span class="badge badge--gold">Only at Uncrate</span>
+{% endif %}
+{% if card_product.tags contains 'her' %}
+  <span class="badge badge--gold">For Her</span>
+{% endif %}
+{% if is_promotion == true %}
+  <span
+    id="NoMediaStandardBadge-{{ section_id }}-{{ card_product.id }}"
+    class="badge badge--bottom-left color-{{ settings.sale_badge_color_scheme }}"
+  >
+    20% Off at Checkout
+  </span>
+{% endif %}
+{%- if card_product.available == false -%}
+  {% comment %}
+    <span
+      id="NoMediaStandardBadge-{{ section_id }}-{{ card_product.id }}"
+      class="badge badge--bottom-left color-{{ settings.sold_out_badge_color_scheme }}"
+    >
+      {{- 'products.product.sold_out' | t -}}
+    </span>
+  {% endcomment %}
+{%- elsif card_product.compare_at_price > card_product.price and card_product.available and is_promotion == false -%}
+  <span
+    id="NoMediaStandardBadge-{{ section_id }}-{{ card_product.id }}"
+    class="badge badge--bottom-left color-{{ settings.sale_badge_color_scheme }}"
+  >
+    {{- 'products.product.on_sale' | t -}}
+  </span>
+{%- endif -%}

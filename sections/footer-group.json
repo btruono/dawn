@@ -2,52 +2,115 @@
   "name": "t:sections.footer.name",
   "type": "footer",
   "sections": {
-    "footer": {
-      "type": "footer",
+    "5bc37c39-2350-4390-894d-16339e694848": {
+      "type": "newsletter",
       "blocks": {
-        "footer-0": {
-          "type": "link_list",
+        "sections--14917568397377__5bc37c39-2350-4390-894d-16339e694848-16836450411b7c7d1b-0": {
+          "type": "heading",
           "settings": {
-            "heading": "Quick links",
-            "menu": "footer"
+            "heading": "Get on the Black List.",
+            "heading_size": "h1"
           }
         },
-        "footer-1": {
-          "type": "link_list",
+        "sections--14917568397377__5bc37c39-2350-4390-894d-16339e694848-16836450411b7c7d1b-1": {
+          "type": "paragraph",
           "settings": {
-            "heading": "Info",
-            "menu": "footer"
+            "text": "<p>BE THE FIRST TO KNOW ABOUT THE NEWEST GEAR, AUTOMOBILES, AND APPAREL FOR MEN.<\/p>"
           }
         },
-        "footer-2": {
-          "type": "text",
+        "sections--14917568397377__5bc37c39-2350-4390-894d-16339e694848-16836450411b7c7d1b-2": {
+          "type": "email_form",
           "settings": {
-            "heading": "Our mission",
-            "subtext": "<p>Share contact information, store details, and brand content with your customers.<\/p>"
           }
         }
       },
       "block_order": [
-        "footer-0",
-        "footer-1",
-        "footer-2"
+        "sections--14917568397377__5bc37c39-2350-4390-894d-16339e694848-16836450411b7c7d1b-0",
+        "sections--14917568397377__5bc37c39-2350-4390-894d-16339e694848-16836450411b7c7d1b-1",
+        "sections--14917568397377__5bc37c39-2350-4390-894d-16339e694848-16836450411b7c7d1b-2"
+      ],
+      "disabled": true,
+      "settings": {
+        "color_scheme": "accent-1",
+        "full_width": true,
+        "padding_top": 24,
+        "padding_bottom": 24
+      }
+    },
+    "footer": {
+      "type": "footer",
+      "blocks": {
+        "b3d0954b-9bc9-4949-a3a5-280da533388a": {
+          "type": "link_list",
+          "settings": {
+            "heading": "UNCRATE.COM",
+            "menu": "sections"
+          }
+        },
+        "d2e98a5e-ac54-484d-9141-4d1de8d6db6e": {
+          "type": "link_list",
+          "settings": {
+            "heading": "UNCRATE.TV",
+            "menu": "new-tv-menu"
+          }
+        },
+        "ddeeb739-c7a4-458d-9696-5e279051f061": {
+          "type": "link_list",
+          "settings": {
+            "heading": "MAGAZINE",
+            "menu": "uncrate-magazine"
+          }
+        },
+        "16edfbb4-87ae-4557-9f4f-2b8de07fe1ba": {
+          "type": "link_list",
+          "settings": {
+            "heading": "UNCRATE.SUPPLY",
+            "menu": "new-supply-menu"
+          }
+        },
+        "f31649c0-ed4d-4a95-89b3-2f3b6c53c352": {
+          "type": "link_list",
+          "settings": {
+            "heading": "ELSEWHERE",
+            "menu": "elsewhere"
+          }
+        },
+        "fba1ee5b-effc-4d51-a545-afcb435264e1": {
+          "type": "link_list",
+          "settings": {
+            "heading": "IMPRINT",
+            "menu": "footer"
+          }
+        }
+      },
+      "block_order": [
+        "b3d0954b-9bc9-4949-a3a5-280da533388a",
+        "d2e98a5e-ac54-484d-9141-4d1de8d6db6e",
+        "ddeeb739-c7a4-458d-9696-5e279051f061",
+        "16edfbb4-87ae-4557-9f4f-2b8de07fe1ba",
+        "f31649c0-ed4d-4a95-89b3-2f3b6c53c352",
+        "fba1ee5b-effc-4d51-a545-afcb435264e1"
       ],
       "settings": {
-        "color_scheme": "background-1",
-        "newsletter_enable": true,
+        "color_scheme": "accent-1",
+        "background_image_2x": "shopify:\/\/shop_images\/utah1_2x_0f724867-f03a-48e2-b70e-50d88e23c888.jpg",
+        "background_image_1x": "shopify:\/\/shop_images\/utah1.jpg",
+        "newsletter_enable": false,
         "newsletter_heading": "Subscribe to our emails",
+        "enable_follow_on_shop": false,
         "show_social": true,
-        "enable_country_selector": false,
-        "enable_language_selector": false,
+        "enable_country_selector": true,
+        "enable_language_selector": true,
         "payment_enable": true,
-        "show_policy": false,
-        "margin_top": 48,
+        "show_policy": true,
+        "margin_top": 36,
         "padding_top": 36,
         "padding_bottom": 36
       }
     }
   },
   "order": [
+    "5bc37c39-2350-4390-894d-16339e694848",
     "footer"
   ]
 }

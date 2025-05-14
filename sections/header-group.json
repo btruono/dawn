@@ -17,28 +17,39 @@
       },
       "block_order": [
         "announcement-bar-0"
-      ]
+      ],
+      "disabled": true,
+      "settings": {
+      }
     },
     "header": {
       "type": "header",
       "settings": {
-        "color_scheme": "background-1",
         "logo_position": "middle-left",
-        "menu": "main-menu",
-        "menu_type_desktop": "dropdown",
+        "menu": "main-menu-v2",
+        "menu_type_desktop": "drawer",
         "sticky_header_type": "on-scroll-up",
         "show_line_separator": true,
+        "color_scheme": "accent-1",
         "enable_country_selector": true,
-        "enable_language_selector": true,
+        "enable_language_selector": false,
         "mobile_logo_position": "center",
         "margin_bottom": 0,
-        "padding_top": 20,
-        "padding_bottom": 20
+        "padding_top": 0,
+        "padding_bottom": 0
+      }
+    },
+    "466b4288-b066-47f8-93d2-a78b40c41fcc": {
+      "type": "navigation",
+      "settings": {
+        "menu": "main-menu-v2",
+        "desktop_menu_type": "expanded"
       }
     }
   },
   "order": [
     "announcement-bar",
-    "header"
+    "header",
+    "466b4288-b066-47f8-93d2-a78b40c41fcc"
   ]
 }

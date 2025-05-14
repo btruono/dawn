@@ -1,0 +1,3 @@
+{% if item.variant.inventory_quantity < 20 and item.variant.inventory_quantity > 0 %}
+  <p>{{- 'products.product.inventory_low_stock_show_count' | t: quantity: item.variant.inventory_quantity -}}</p>
+{% endif %}

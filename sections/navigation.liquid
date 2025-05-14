@@ -1,0 +1,222 @@
+{{ 'component-navigation.css' | asset_url | stylesheet_tag }}
+
+{% liquid
+  assign show_billboard = false
+  assign current_date = 'now' | date: '%Y-%m-%d-%H%M'
+  assign end_date = '2024-12-16-2259'
+  assign holiday_message = '$50 on us for orders over $250 / Code SANTA'
+
+  assign show_holiday_message = false
+  if current_date <= end_date
+    assign show_holiday_message = true
+  endif
+%}
+
+{% capture top_links %}
+  
+  {% assign red_urls = '/collections/surplus|/collections/sale' | split: '|' %}
+  {% comment %} {% assign red_urls = '/collections/gifts' | split: '|' %} {% endcomment %}
+  {% assign gold_urls = '' | split: '|' %}
+  {% comment %} {% assign yellow_urls = '/collections/ultimate-gifts' | split: '|' %} {% endcomment %}
+
+  {% for link in linklists['new-apparel-menu'].links %}
+    {% liquid
+      assign link_class = ''
+      if red_urls contains link.url
+        assign link_class = 'red'
+      elsif yellow_urls contains link.url
+        assign link_class = 'yellow'
+      elsif section.settings.desktop_menu_type == "dropdown" or gold_urls contains link.url
+        assign link_class = 'gold'
+      endif 
+    %}
+      {% if forloop.index != 1 and section.settings.desktop_menu_type == "dropdown" %}<span class="main-nav-separator">/</span>{% endif %}
+    <li>
+      <a href="{{ link.url }}" data-category="{{ link.title }}" class="{{ link_class }}">
+        {{ link.title }}
+        {% if link.title == 'Gifts' %}🎁{% endif %}
+        {% if link.title == 'Ultimate Gifts' %}🙀{% endif %}
+      </a>
+    </li>
+  {% endfor %}
+{% endcapture %}
+
+<div class="supply-header">
+  <h1 class="supply-logo">
+    <a href="{{ routes.root_url }}">Uncrate Supply <sup>&reg;</sup></a>
+  </h1>
+
+  <p class="supply-tagline">
+    Objects of desire &amp; tools of the trade,<br>
+    sold directly by Uncrate.
+  </p>
+
+  <div class="supply-icons">
+    <a id="search-toggle" href="/search">Search</a>
+    <a href="{{ routes.cart_url }}" id="cart-icon-bubble" class="btn--crate-tab js-prevent-cart-listener">
+      {% if cart != empty %}
+        <div class="cart-count-bubble" data-count="{{ cart.item_count }}">
+          <span aria-hidden="true">{{ cart.item_count }}</span>
+          <span class="visually-hidden">{{ cart.item_count }} items</span>
+        </div>
+      {% endif %}
+    </a>
+    <button id="bottle-nexus-cart-nav" class="bottle-cart-btn">
+      {% render 'icon-bottle-2' %}
+      <div class="cart-count-bubble">0</div>
+    </button>
+  </div>
+</div>
+<div class="wrapper navigation-wrapper supply-navigation-wrapper">
+  <div class="navigation">
+    {% if show_holiday_message %}
+      <div
+        class="nav-promo u-uc-type u-text-center u-text-red"
+        style="padding-block: 21px 18px; line-height: 1; border-top: 1px solid #000;"
+      >
+        {{ holiday_message }}
+      </div>
+    {% endif %}
+    <div class="main-nav full" id="main-nav">
+      {% if section.settings.desktop_menu_type == 'expanded' %}
+        <ul class="nav nav--top-links">
+          {{ top_links }}
+        </ul>
+      {% endif %}
+      {% unless template == 'cart' %}
+        <ul
+          class="
+            nav
+            {% if section.settings.desktop_menu_type == "expanded" %}
+              nav--expanded
+            {% endif %}
+          "
+        >
+          {% if section.settings.desktop_menu_type == 'dropdown' %}
+            {{ top_links }}
+            <li class="supply-break-lines"></li>
+          {% endif %}
+          {% for link in linklists[section.settings.menu].links %}
+            <li
+              class="
+                {% if section.settings.desktop_menu_type == "dropdown" %}
+                  dropdown
+                {% endif %}
+              "
+            >
+              <a href="{{ link.url }}" data-category="{{ link.title }}">{{ link.title }}</a>
+
+              {% if section.settings.desktop_menu_type == 'dropdown' %}
+                {% unless forloop.last %}
+                  <span class="main-nav-separator">/</span>
+                {% endunless %}
+              {% endif %}
+              {% if link.links != blank %}
+                <ul
+                  class="
+                    {% if section.settings.desktop_menu_type == "dropdown" %}
+                      dropdown-menu
+                    {% endif %}
+                    supply-dropdown
+                  "
+                >
+                  {% for child_link in link.links %}
+                    <li>
+                      <a
+                        href="{{ child_link.url }}"
+                        data-name="{{ child_link.title }}"
+                        data-category="{{ child_link.title }}"
+                      >
+                        {{- child_link.title -}}
+                      </a>
+                    </li>
+                  {% endfor %}
+                </ul>
+              {% endif %}
+            </li>
+          {% endfor %}
+        </ul>
+      {% endunless %}
+    </div>
+
+    {% if show_billboard %}
+      {% if template == 'index' or template == 'collection' %}
+        {% if current_date >= cyber_monday_gif_start_date and current_date < end_date %}
+          <div style="margin-top: 20px; padding-bottom: 20px; border-bottom: 1px solid #000;">
+            <img
+              src="{{ 'phat-bb-big.gif' | asset_url }}"
+              alt="20% Off Hundreds of Items At Checkout / No Promo Code Needed"
+              style="width: 100%; max-width: 100%; height: auto; display: block; background: #000; color: #fff;"
+              width="1920"
+              height="640"
+            >
+          </div>
+        {% elsif current_date < end_date %}
+          <div style="margin-top: 20px; padding-bottom: 20px; border-bottom: 1px solid #000;">
+            <img
+              src="{{ 'bf-2023-bb.jpg' | asset_url }}"
+              alt="20% off most everything. Auto applied at checkout. No promo code."
+              style="width: 100%; max-width: 100%; height: auto; display: block; background: #000; color: #fff;"
+              width="1920"
+              height="500"
+            >
+          </div>
+        {% endif %}
+      {% endif %}
+    {% endif %}
+  </div>
+</div>
+
+<h1 class="supply-logo mobile-supply-logo">
+  <a href="{{ routes.root_url }}">Uncrate Supply<sup>®</sup></a>
+</h1>
+{% if show_holiday_message %}
+  <div class="supply-promo-mobile page-width">
+    <div
+      class="nav-promo u-uc-type u-text-center u-text-red"
+      style="padding-block: 21px 18px; line-height: 1.3; border-top: 1px solid #000;"
+    >
+      {{ holiday_message }}
+    </div>
+  </div>
+{% endif %}
+
+{% schema %}
+{
+  "name": "Navigation",
+  "class": "navigation-header",
+  "tag": "div",
+  "enabled_on": {
+    "groups": ["header"]
+  },
+  "settings": [
+    {
+      "type": "link_list",
+      "id": "menu",
+      "default": "main-menu",
+      "label": "t:sections.header.settings.menu.label"
+    },
+    {
+      "type": "select",
+      "id": "desktop_menu_type",
+      "options": [
+        {
+          "value": "dropdown",
+          "label": "Dropdown"
+        },
+        {
+          "value": "expanded",
+          "label": "Expanded"
+        }
+      ],
+      "default": "dropdown",
+      "label": "Desktop Menu Type"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Navigation"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,270 @@
+// sets all fonts to be helvetica neue
+* {
+  font-family: "Helvetica Neue", helvetica, arial, sans-serif !important;
+}
+
+.content {
+  background: #fff;
+}
+
+.logo__image {
+  max-width: 200px;
+}
+
+.boxshadow .main .field__input {
+  box-shadow: none;
+  border: 1px solid #d5d5d5;
+  border-radius: 0px;
+}
+
+.btn {
+  border-radius: 0px;
+  text-transform: uppercase;
+}
+
+.field__input, 
+.content-box  {
+  border-radius: 0px;
+  letter-spacing: .5px;
+}
+
+.product-thumbnail {
+  background: transparent;
+  border-radius: 0px;
+}
+
+.product-thumbnail::after {
+  box-shadow: none;
+  border: 0px;
+}
+
+.payment-due__price,
+.order-summary__emphasis {
+  color: #000;
+}
+
+.btn  {
+  padding: 4px 22px;
+  font-size: 12px; 
+  line-height: 20px;
+  height: 40px;
+  font-weight: bold;
+  font-weight: 700;
+}
+
+.wrap {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: .5px;
+}
+
+h2, 
+.main__footer a,
+.payment-due__price, 
+.order-summary__emphasis,
+.payment-due-label__total {
+  font-size: 12px;
+  font-weight: bold;
+  color: #000;
+}
+
+.payment-due__currency {
+    font-size: 12px;
+  vertical-align: 0;
+}
+
+.main .field__input,
+.boxshadow .main .field__input {
+  font-size: 12px;
+  color: #000;
+  font-weight: bold;
+  padding-left: 0.89571em;
+  letter-spacing: .5px;    
+}
+
+.floating-labels .field--show-floating-label .field__label,
+.floating-labels .main .field__label {
+  font-size: 12px;
+  text-transform: uppercase;
+  font-weight: normal;
+}
+
+::-webkit-input-placeholder { /* Chrome/Opera/Safari */
+  font-weight: normal;
+  text-transform: uppercase;
+  letter-spacing: .5px;
+}
+::-moz-placeholder { /* Firefox 19+ */
+  font-weight: normal;
+  text-transform: uppercase;
+  letter-spacing: .5px;
+}
+:-ms-input-placeholder { /* IE 10+ */
+  font-weight: normal;
+  text-transform: uppercase;
+  letter-spacing: .5px;
+}
+:-moz-placeholder { /* Firefox 18- */
+  font-weight: normal;
+  text-transform: uppercase;
+  letter-spacing: .5px;
+}
+
+.main .field__input::-moz-placeholder {
+  font-weight: normal;
+  text-transform: uppercase;
+  letter-spacing: .5px;
+
+}
+
+.main .field__input::-ms-input-placeholder {
+  font-weight: normal;
+  text-transform: uppercase;
+  letter-spacing: .5px;  
+}
+
+.main .field__input::-webkit-input-placeholder {
+  font-weight: normal;
+  text-transform: uppercase;
+  letter-spacing: .5px;  
+}
+
+.floating-labels .field--show-floating-label .field__input {
+    padding-top: 1.5em;
+}
+
+@media (min-width: 1000px) {
+	.order-summary__section--product-list::after {
+    background: transparent;
+    bottom: 0;
+	}
+}
+
+
+/* .paypal-button.paypal-button-color-gold {
+  background: #e1e1e1 !important;
+}
+ */
+
+.dynamic-checkout__title {
+  display: none !important;
+}
+
+.dynamic-checkout__content .shopify-cleanslate .J9u0hym-uCR2bI3niYAwt {
+  margin-bottom: 0px !important;
+}
+
+.shopify-cleanslate ._3tXeFK4DruOoZPDcFMNLLN {
+  display: none !important;
+}
+
+.dynamic-checkout__content {
+  padding: 0;
+  border: 0;
+} 
+
+.breadcrumb__item {
+  font-size: 12px;
+}  
+
+.step__footer__continue-btn {
+  white-space: nowrap;
+}
+
+/* .order-summary__section.order-summary__section--discount {
+  display: none;
+} */
+
+.section--reductions.hidden-on-desktop {
+  display: none;
+}
+
+.product-thumbnail__quantity {
+  padding: 0;
+      height: 20px;
+    width: 20px;
+    text-align: center;
+    line-height: 20px;
+}
+
+.step__footer__continue-btn.btn {
+  .btn__content {
+  	line-height: 2.25;
+  }
+}
+
+.notice--success {
+  background: #fff;
+	
+  .notice__icon {
+    color: #000;
+  }
+}
+
+.icon-svg--color-red {
+  color: #000;
+}
+
+/* .paypal-button.paypal-button-color-gold {
+  background-color: #e1e1e1 !important;
+}
+
+.alt-payment-list__item--paypal {
+  background-color: #e1e1e1 !important;
+}
+
+.alt-payment-list__item--amazon {
+  //background: #bbb !important;
+  background: #e1e1e1 !important;
+} */
+
+/* .alt-payment-list__item__link {
+  height: 36px;
+  box-sizing: border-box;
+  padding: 11px 0;
+} */
+
+/* .alt-payment-list__item--apple-pay {
+  
+}
+ */
+
+/* @media (min-width: 750px) {
+  .alt-payment-list__item--amazon {
+  	.alt-payment-list__item__link {
+      padding: 0.63em 0;
+      min-width: 10.78571em;
+      
+      img {
+        max-width: 90px;
+        height: auto;
+        -webkit-transform: translateY(0.15em);
+    	transform: translateY(0.15em);
+      }
+  	}
+  }
+} */
+
+/* .amazon-payments-pay-button {
+  background: url('{{ 'amazon_pay_logo.png' | asset_url }}') center 12px no-repeat;
+  background-size: auto 16px;
+  font-size: 12px;
+  img {
+  	opacity: 0;
+  }
+} */
+
+.anyflexbox .field__input-btn {
+  height: 42px; 
+}
+
+.dynamic-checkout__title::before,
+.dynamic-checkout__title::after,
+.dynamic-checkout__content {
+  border-radius: 0; 
+}
+
+
+
+
+

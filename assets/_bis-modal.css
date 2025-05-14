@@ -1,0 +1,112 @@
+/* 
+  NOTE: These styles are edited implemented on https://app.backinstock.org/widget/edit/language?category=bis
+  This is a back up of those styles in case they get deletted
+ */
+
+/* bis modal */
+
+.interaction_blocker {
+  display: none;
+}
+
+#container {
+  border-radius: 0;
+  font-size: 12px;
+  text-transform: uppercase;
+  font-weight: 700;
+  font-family: "helvetica", "arial", sans-serif;
+  letter-spacing: 0.04166667em;
+}
+
+:is(input, select):focus {
+  background: #fff !important;
+  border-color: #000 !important;
+  box-shadow: none !important;
+}
+
+#variant-select-container .form-group > div {
+  position: relative;
+}
+#variant-select-container .form-group > div:after {
+  content: "";
+  display: block;
+  background: #000;
+  width: 1rem;
+  height: 0.6rem;
+  position: absolute;
+  top: 50%;
+  right: 25px;
+  clip-path: polygon(100% 0%, 0 0%, 50% 100%);
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+select.input-lg {
+  appearance: none;
+  line-height: 1;
+}
+
+.modal-title {
+  font-size: 12px;
+  font-weight: bold;
+  color: #000 !important;
+  margin-bottom: 10px;
+}
+#bis-modal-desc {
+  font-weight: normal;
+}
+
+.input-lg {
+  border-radius: 0;
+  border-color: #000;
+  font-size: 12px !important;
+  text-transform: uppercase;
+  font-weight: bold;
+  letter-spacing: 0.04166667em;
+  color: #000;
+}
+
+.btn {
+  font-size: 12px !important;
+  text-transform: uppercase;
+  font-family: "helvetica", "arial", sans-serif;
+  font-weight: bold !important;
+  border-radius: 0 !important;
+}
+
+.alert {
+  padding: 0;
+  font-weight: 700;
+  font-size: 12px;
+  text-align: center;
+}
+
+hr {
+  border-color: #000;
+}
+
+.small-print {
+  opacity: 1;
+  font-weight: normal;
+  text-align: center;
+  font-size: 12px;
+}
+
+h4.product-name {
+  list-style: none;
+  box-sizing: inherit;
+  font-size: 1.2rem;
+  display: block;
+  letter-spacing: 0.04166667em;
+  text-transform: uppercase;
+  font-weight: 600;
+  padding-left: 0;
+  margin-bottom: 2rem;
+  color: #000;
+}
+
+.close {
+  color: #000 !important;
+  opacity: 1;
+  position: relative;
+  top: -2px;
+}

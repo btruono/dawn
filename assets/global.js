@@ -812,7 +812,7 @@ class VariantSelects extends HTMLElement {
   onVariantChange() {
     this.updateOptions();
     this.updateMasterId();
-    this.toggleAddButton(true, '', false);
+    // this.toggleAddButton(true, '', false);
     this.updatePickupAvailability();
     this.removeErrorMessage();
     this.updateVariantStatuses();
@@ -889,9 +889,9 @@ class VariantSelects extends HTMLElement {
   setInputAvailability(listOfOptions, listOfAvailableOptions) {
     listOfOptions.forEach(input => {
       if (listOfAvailableOptions.includes(input.getAttribute('value'))) {
-        input.innerText = input.getAttribute('value');
+        // input.innerText = input.getAttribute('value');
       } else {
-        input.innerText = window.variantStrings.unavailable_with_option.replace('[value]', input.getAttribute('value'));
+        // input.innerText = window.variantStrings.unavailable_with_option.replace('[value]', input.getAttribute('value'));
       }
     });
   }
@@ -944,8 +944,9 @@ class VariantSelects extends HTMLElement {
         const price = document.getElementById(`price-${this.dataset.section}`);
 
         if (price) price.classList.remove('visibility-hidden');
+        console.log(inventorySource);
 
-        if (inventoryDestination) inventoryDestination.classList.toggle('visibility-hidden', inventorySource.innerText === '');
+        if (inventoryDestination && inventorySource) inventoryDestination.classList.toggle('visibility-hidden', inventorySource.innerText === '');
 
         const addButtonUpdated = html.getElementById(`ProductSubmitButton-${sectionId}`);
         this.toggleAddButton(addButtonUpdated ? addButtonUpdated.hasAttribute('disabled') : true, window.variantStrings.soldOut);
@@ -963,14 +964,25 @@ class VariantSelects extends HTMLElement {
     if (!productForm) return;
     const addButton = productForm.querySelector('[name="add"]');
     const addButtonText = productForm.querySelector('[name="add"] > span');
+    const buttonNoticeTextInStock = document.getElementById('button-notice-text-in-stock');
+    const buttonNoticeTextOutOfStock = document.getElementById('button-notice-text-out-of-stock');
+    const defaultID = addButton.dataset.id
+    const shopifyPaymentButton = document.getElementById('shopify-payment-buttons');
     if (!addButton) return;
 
     if (disable) {
-      addButton.setAttribute('disabled', 'disabled');
-      if (text) addButtonText.textContent = text;
+      addButton.setAttribute('id', 'BIS_trigger');
+      buttonNoticeTextInStock.classList.add('hidden');
+      buttonNoticeTextOutOfStock.classList.remove('hidden');
+      shopifyPaymentButton.classList.add('hidden');
+      
+      if (text) addButtonText.textContent = "Notify Me";
     } else {
-      addButton.removeAttribute('disabled');
+      addButton.setAttribute('id', defaultID);
+      buttonNoticeTextInStock.classList.remove('hidden');
+      buttonNoticeTextOutOfStock.classList.add('hidden');
       addButtonText.textContent = window.variantStrings.addToCart;
+      shopifyPaymentButton.classList.remove('hidden');
     }
 
     if (!modifyClass) return;
@@ -1063,3 +1075,93 @@ class ProductRecommendations extends HTMLElement {
 }
 
 customElements.define('product-recommendations', ProductRecommendations);
+
+
+
+// --------------------------------------------------------
+// bottle nexus cart customizations
+// --------------------------------------------------------
+
+(async () => {
+  const bottleNexusCartNavs = await waitForElements(".bottle-cart-btn");
+  const bottleNexusTogglePre = await waitForElement('div[data-style="bottle-nexus-toggle"]');
+  if (bottleNexusTogglePre) {
+    bottleNexusTogglePre.id = 'bottle-nexus-toggle';
+  }
+  const infiniteOptionsContainer = document.getElementById("infiniteoptions-container");
+  const bottleNexusButton = document.getElementById("bottle-nexus-button");
+  if (bottleNexusButton.style.display !== "none" && infiniteOptionsContainer) {
+      bottleNexusButton.style.display = "none";
+      infiniteOptionsContainer.style.display = "block";
+    }
+  cartUpdates();
+  const bottleNexusCart = document.getElementById("cart-bottle-nexus");
+
+  bottleNexusCartObserver.observe(bottleNexusCart, { childList: true, subtree: true })
+  
+  bottleNexusCartNavs.forEach((bottleNexusCartNav) => {
+    bottleNexusCartNav.addEventListener("click", function () {
+      document.querySelector("#bottle-nexus-toggle button").click();
+    });
+  });
+  
+})();
+
+// single, first element
+async function waitForElement(selector) {
+  while (!document.querySelector(selector)) {
+    await new Promise((resolve) => requestAnimationFrame(resolve));
+  }
+  return document.querySelector(selector);
+}
+
+// all elements
+async function waitForElements(selector) {
+  while (!document.querySelectorAll(selector)) {
+    await new Promise((resolve) => requestAnimationFrame(resolve));
+  }
+  return document.querySelectorAll(selector);
+}
+
+
+// mutation observer for bottleNexusToggle
+const bottleNexusCartObserver = new MutationObserver((mutations) => {
+  const toggleButtonContainer = document.getElementById("bottle-nexus-toggle");
+  mutations.forEach(({type, target}) => {
+    if (toggleButtonContainer.style.display === "none") {
+      document.body.classList.remove("has-bottle-in-cart");
+    } else {
+      document.body.classList.add("has-bottle-in-cart");
+    }
+    cartUpdates();
+  });
+})
+
+document.querySelectorAll(`[data-email]`).forEach((eLink) => {
+  eLink.addEventListener('click', function(e) {
+    e.preventDefault();
+    const email = `${eLink.dataset.email}@uncrate.com`;
+    const dataSubject = eLink.dataset.emailSubject ? `${eLink.dataset.emailSubject}` : null;
+    const dataBody = eLink.dataset.emailBody ? `${eLink.dataset.emailBody}` : null;
+    window.location.href = `mailto:${email}?` + (dataSubject ? `subject=${dataSubject}&` : '') + (dataBody ? `body=${dataBody}&` : '');
+  });
+});
+
+// let mutationIsHappened = false
+function cartUpdates() {
+  const bottleNexusCartNavs = document.querySelectorAll(".bottle-cart-btn");
+  // update cart count in nav
+  const bottleNexusToggleBtn = document.querySelector("#bottle-nexus-toggle button");
+
+  let cartCount = 0;
+  if (bottleNexusToggleBtn) {
+    let tempHtml = bottleNexusToggleBtn.cloneNode(true);
+    const svgs = tempHtml.querySelectorAll('svg');
+    svgs.forEach(svg => svg.remove());
+
+    cartCount = tempHtml.innerHTML;
+  }
+  bottleNexusCartNavs.forEach((nav) => {
+    nav.querySelector(".cart-count-bubble").innerHTML = cartCount;
+  });
+}

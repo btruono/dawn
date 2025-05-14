@@ -28,21 +28,23 @@ class CartDrawer extends HTMLElement {
     const cartDrawerNote = this.querySelector('[id^="Details-"] summary');
     if (cartDrawerNote && !cartDrawerNote.hasAttribute('role')) this.setSummaryAccessibility(cartDrawerNote);
     // here the animation doesn't seem to always get triggered. A timeout seem to help
-    setTimeout(() => {this.classList.add('animate', 'active')});
+    setTimeout(() => {
+      this.classList.add('animate', 'active')
+    });
 
     this.addEventListener('transitionend', () => {
       const containerToTrapFocusOn = this.classList.contains('is-empty') ? this.querySelector('.drawer__inner-empty') : document.getElementById('CartDrawer');
       const focusElement = this.querySelector('.drawer__inner') || this.querySelector('.drawer__close');
       trapFocus(containerToTrapFocusOn, focusElement);
     }, { once: true });
-
-    document.body.classList.add('overflow-hidden');
+    document.body.classList.add('overflow-hidden', 'drawer-open');
   }
-
+  
   close() {
     this.classList.remove('active');
     removeTrapFocus(this.activeElement);
-    document.body.classList.remove('overflow-hidden');
+    document.body.classList.remove('overflow-hidden', 'drawer-open');
+    
   }
 
   setSummaryAccessibility(cartDrawerNote) {
@@ -67,6 +69,7 @@ class CartDrawer extends HTMLElement {
       const sectionElement = section.selector ? document.querySelector(section.selector) : document.getElementById(section.id);
       sectionElement.innerHTML =
           this.getSectionInnerHTML(parsedState.sections[section.id], section.selector);
+
     }));
 
     setTimeout(() => {
@@ -89,6 +92,9 @@ class CartDrawer extends HTMLElement {
       },
       {
         id: 'cart-icon-bubble'
+      },
+      {
+        id: 'cart-icon-bubble-2'
       }
     ];
   }
@@ -117,6 +123,11 @@ class CartDrawerItems extends CartItems {
       {
         id: 'cart-icon-bubble',
         section: 'cart-icon-bubble',
+        selector: '.shopify-section'
+      },
+      {
+        id: 'cart-icon-bubble-2',
+        section: 'cart-icon-bubble-2',
         selector: '.shopify-section'
       }
     ];

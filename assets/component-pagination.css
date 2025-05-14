@@ -1,5 +1,6 @@
 .pagination-wrapper {
   margin-top: 4rem;
+  display: none;
 }
 
 @media screen and (min-width: 990px) {
@@ -79,4 +80,9 @@ a.pagination__item:hover::after {
 
 .pagination__item-arrow:hover::after {
   display: none;
+}
+
+.inline-paginate {
+  padding-block: 2rem;
+  text-align: center;
 }
